@@ -1,6 +1,26 @@
 # pose_extractor.py
 import mediapipe as mp
+import numpy as np
 from mediapipe.tasks.python import vision
+
+# Approximate mass distribution weights for the 33 landmarks
+_RAW_WEIGHTS = np.array([
+    # 0-10: Head/Face
+    1.0, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.5, 0.5, 0.2, 0.2,
+    # 11-12: Shoulders (upper trunk)
+    5.0, 5.0,
+    # 13-16: Arms
+    1.5, 1.5, 1.0, 1.0,
+    # 17-22: Hands
+    0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
+    # 23-24: Hips (lower trunk)
+    10.0, 10.0,
+    # 25-26: Knees
+    4.0, 4.0,
+    # 27-32: Ankles/Feet
+    1.5, 1.5, 1.0, 1.0, 0.5, 0.5
+])
+NORMALIZED_WEIGHTS = _RAW_WEIGHTS / np.sum(_RAW_WEIGHTS)
 
 class PoseExtractor:
     def __init__(self, required_landmarks=None):
@@ -27,12 +47,21 @@ class PoseExtractor:
         
         for idx in self.required_landmarks:
             if idx == -1: # Custom Center of Gravity (CG)
-                left_hip = pose[23]
-                right_hip = pose[24]
+                # Compute weighted sum of all 33 landmarks
+                cg_x = 0.0
+                cg_y = 0.0
+                cg_z = 0.0
+                
+                for i in range(len(pose)):
+                    weight = NORMALIZED_WEIGHTS[i]
+                    cg_x += pose[i].x * weight
+                    cg_y += pose[i].y * weight
+                    cg_z += pose[i].z * weight
+                    
                 landmarks_dict[-1] = {
-                    "x": (left_hip.x + right_hip.x) / 2.0,
-                    "y": (left_hip.y + right_hip.y) / 2.0,
-                    "z": (left_hip.z + right_hip.z) / 2.0
+                    "x": cg_x,
+                    "y": cg_y,
+                    "z": cg_z
                 }
             elif 0 <= idx < len(pose):
                 landmark = pose[idx]

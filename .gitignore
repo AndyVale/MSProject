@@ -3,3 +3,5 @@
 
 models/
 *.task
+
+__pycache__

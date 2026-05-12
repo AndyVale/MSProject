@@ -1,0 +1,1 @@
+This folder should contain all the models needed to run the project (e.g. to get the landmarks)

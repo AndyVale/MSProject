@@ -15,7 +15,7 @@ from ui_renderer import UIRenderer
 from exercise_loader import ExerciseLoader
 
 def main():
-    camera_capture = init_camera(width=1080, height=720, index=0)
+    camera_capture = init_camera(width=2048 , height=1536, index=0)
     
     BaseOptions = mp.tasks.BaseOptions
     PoseLandmarker = mp.tasks.vision.PoseLandmarker
@@ -32,6 +32,9 @@ def main():
     # Components used to extract the landmarks and draw the UI
     extractor = PoseExtractor(list(required_landmarks))
     renderer = UIRenderer()
+    
+    from exercise_evaluator import ExerciseEvaluator
+    evaluator = ExerciseEvaluator(loader.movements, loader.training)
     
 
     options = PoseLandmarkerOptions(
@@ -57,7 +60,11 @@ def main():
             current_result = extractor.latest_result
             
             if current_result is not None and current_image is not None:
-                annotated_image = renderer.draw(current_image, current_result)
+                current_time = time.time()
+                evaluator.update(current_result, current_time)
+                state_info = evaluator.get_state(current_time)
+                
+                annotated_image = renderer.draw(current_image, current_result, state_info)
                 cv2.imshow("Mediapipe Pose Landmarker", annotated_image)
                 
             if cv2.waitKey(1) & 0xFF == ord('q'):

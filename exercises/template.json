@@ -1,0 +1,31 @@
+{
+  "movements": {
+    "MOVEMENT_ID": {
+      "name": "String: Name of the movement",
+      "required_landmarks": [
+        "String: Landmark 1", 
+        "String: Landmark 2"
+      ],
+      "sequence": [
+        {
+          "position_name": "String: e.g., 'start_pose'",
+          "hold_time_seconds": 0.0,
+          "constraints": [
+            {
+              "type": "String: e.g., 'abs_distance_x' or 'angle'",
+              "landmarks": ["Landmark_A", "Landmark_B"],
+              "operator": "String: '<' or '>'",
+              "value": 0.0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "training": [
+    {
+      "movement": "MOVEMENT_ID",
+      "repetitions": 0
+    }
+  ]
+}

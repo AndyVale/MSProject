@@ -1,0 +1,108 @@
+{
+  "movements": {
+    "left_leg_ext": {
+      "name": "Left Leg Extension",
+      "required_landmarks": [
+        "LEFT_ANKLE",
+        "LEFT_HIP",
+        "LEFT_KNEE",
+        "CG"
+      ],
+      "sequence": [
+        {
+          "position_name": "neutral_start",
+          "hold_time_seconds": 0.5,
+          "constraints": [
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["LEFT_ANKLE", "CG"],
+              "operator": "<",
+              "value": 0.15
+            }
+          ]
+        },
+        {
+          "position_name": "extended",
+          "hold_time_seconds": 3.0,
+          "constraints": [
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["LEFT_ANKLE", "CG"],
+              "operator": ">",
+              "value": 0.25
+            }
+          ]
+        },
+        {
+          "position_name": "neutral_end",
+          "hold_time_seconds": 0.2,
+          "constraints": [
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["LEFT_ANKLE", "CG"],
+              "operator": "<",
+              "value": 0.15
+            }
+          ]
+        }
+      ]
+    },
+    "right_leg_ext": {
+      "name": "Right Leg Extension",
+      "required_landmarks": [
+        "RIGHT_ANKLE",
+        "RIGHT_HIP",
+        "RIGHT_KNEE",
+        "CG"
+      ],
+      "sequence": [
+        {
+          "position_name": "neutral_start",
+          "hold_time_seconds": 0.5,
+          "constraints": [
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["RIGHT_ANKLE", "CG"],
+              "operator": "<",
+              "value": 0.15
+            }
+          ]
+        },
+        {
+          "position_name": "extended",
+          "hold_time_seconds": 3.0,
+          "constraints": [
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["RIGHT_ANKLE", "CG"],
+              "operator": ">",
+              "value": 0.25
+            }
+          ]
+        },
+        {
+          "position_name": "neutral_end",
+          "hold_time_seconds": 0.2,
+          "constraints": [
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["RIGHT_ANKLE", "CG"],
+              "operator": "<",
+              "value": 0.15
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "training": [
+    {
+      "movement": "left_leg_ext",
+      "repetitions": 5
+    },
+    {
+      "movement": "right_leg_ext",
+      "repetitions": 5
+    }
+  ]
+}

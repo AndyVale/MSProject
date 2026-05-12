@@ -12,6 +12,7 @@ from utils.utils_camera import init_camera
 # Import our new modular components
 from pose_extractor import PoseExtractor
 from ui_renderer import UIRenderer
+from exercise_loader import ExerciseLoader
 
 def main():
     camera_capture = init_camera(width=1080, height=720, index=0)
@@ -21,9 +22,17 @@ def main():
     PoseLandmarkerOptions = mp.tasks.vision.PoseLandmarkerOptions
     VisionRunningMode = mp.tasks.vision.RunningMode
     
+    loader = ExerciseLoader("exercises/leg_ext.json")
+    
+    # Collect all required landmarks across all movements
+    required_landmarks = set()
+    for movement in loader.movements.values():
+        required_landmarks.update(movement.required_landmarks)
+        
     # Components used to extract the landmarks and draw the UI
-    extractor = PoseExtractor()
+    extractor = PoseExtractor(list(required_landmarks))
     renderer = UIRenderer()
+    
 
     options = PoseLandmarkerOptions(
         base_options=BaseOptions(model_asset_path=str(MODEL_PATH)),

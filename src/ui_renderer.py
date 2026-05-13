@@ -31,20 +31,25 @@ class UIRenderer:
             if state_info["is_completed"]:
                 cv2.putText(annotated_image, "WORKOUT COMPLETE!", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
             else:
-                text_y = 50
-                cv2.putText(annotated_image, f"Exercise: {state_info['movement_name']}", (20, text_y), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+                text_y = 80
                 
-                text_y += 40
-                cv2.putText(annotated_image, f"Target Pose: {state_info['position_name']}", (20, text_y), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+                def draw_text_with_bg(img, text, position, font_scale, text_color, bg_color, thickness=3):
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    (text_w, text_h), baseline = cv2.getTextSize(text, font, font_scale, thickness)
+                    x, y = position
+                    cv2.rectangle(img, (x, y - text_h - 10), (x + text_w + 10, y + baseline + 10), bg_color, -1)
+                    cv2.putText(img, text, (x + 5, y), font, font_scale, text_color, thickness)
+                    return y + baseline + 10
+
+                text_y = draw_text_with_bg(annotated_image, f"Exercise: {state_info['movement_name']}", (20, text_y), 1.5, (255, 255, 255), (0, 0, 0)) + 20
+                text_y = draw_text_with_bg(annotated_image, f"Target: {state_info['position_name']}", (20, text_y), 1.5, (255, 255, 0), (0, 0, 0)) + 20
+                text_y = draw_text_with_bg(annotated_image, f"Reps: {state_info['current_reps']} / {state_info['target_reps']}", (20, text_y), 1.5, (0, 255, 255), (0, 0, 0)) + 40
                 
-                text_y += 40
-                cv2.putText(annotated_image, f"Reps: {state_info['current_reps']} / {state_info['target_reps']}", (20, text_y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
-                
-                # Draw a simple hold progress bar
+                # Draw a massive hold progress bar
                 bar_x = 20
-                bar_y = text_y + 20
-                bar_width = 300
-                bar_height = 20
+                bar_y = text_y
+                bar_width = 400
+                bar_height = 40
                 progress = state_info['hold_progress']
                 
                 # Background
@@ -52,7 +57,7 @@ class UIRenderer:
                 # Foreground progress
                 cv2.rectangle(annotated_image, (bar_x, bar_y), (bar_x + int(bar_width * progress), bar_y + bar_height), (0, 255, 0), -1)
                 # Border
-                cv2.rectangle(annotated_image, (bar_x, bar_y), (bar_x + bar_width, bar_y + bar_height), (255, 255, 255), 2)
+                cv2.rectangle(annotated_image, (bar_x, bar_y), (bar_x + bar_width, bar_y + bar_height), (255, 255, 255), 3)
                 
                 # Debug Info at bottom
                 debug_info = state_info.get("debug_info", "")

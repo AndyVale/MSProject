@@ -33,15 +33,16 @@ class Position:
 
 
 class Movement:
-    def __init__(self, movement_id: str, name: str, required_landmarks: list, sequence: list):
+    def __init__(self, movement_id: str, name: str, normalization_modality: str, required_landmarks: list, sequence: list):
         self.id = movement_id
         self.name = name
+        self.normalization_modality = normalization_modality
         # Convert to mapped integers
         self.required_landmarks = [LANDMARK_MAP[lm] for lm in required_landmarks]
         self.sequence = sequence
 
     def __repr__(self):
-        return f"Movement(id='{self.id}', name='{self.name}', positions={len(self.sequence)})"
+        return f"Movement(id='{self.id}', name='{self.name}', norm='{self.normalization_modality}', positions={len(self.sequence)})"
 
 
 # ==========================================
@@ -90,6 +91,7 @@ class ExerciseLoader:
             movement = Movement(
                 movement_id=movement_id,
                 name=m_data.get("name", ""),
+                normalization_modality=m_data.get("normalization_modality", "none"),
                 required_landmarks=m_data.get("required_landmarks", []),
                 sequence=sequence_list
             )

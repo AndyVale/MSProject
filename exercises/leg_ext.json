@@ -2,6 +2,7 @@
   "movements": {
     "left_leg_ext": {
       "name": "Left Leg Extension",
+      "normalization_modality": "torso",
       "required_landmarks": [
         "LEFT_ANKLE",
         "LEFT_HIP",
@@ -17,7 +18,7 @@
               "type": "abs_distance_x",
               "landmarks": ["LEFT_ANKLE", "CG"],
               "operator": "<",
-              "value": 0.05
+              "value": 0.15
             }
           ]
         },
@@ -29,7 +30,7 @@
               "type": "abs_distance_x",
               "landmarks": ["LEFT_ANKLE", "CG"],
               "operator": ">",
-              "value": 0.125
+              "value": 0.45
             }
           ]
         },
@@ -41,7 +42,7 @@
               "type": "abs_distance_x",
               "landmarks": ["LEFT_ANKLE", "CG"],
               "operator": "<",
-              "value": 0.05
+              "value": 0.15
             }
           ]
         }
@@ -49,6 +50,7 @@
     },
     "right_leg_ext": {
       "name": "Right Leg Extension",
+      "normalization_modality": "torso",
       "required_landmarks": [
         "RIGHT_ANKLE",
         "RIGHT_HIP",
@@ -64,7 +66,7 @@
               "type": "abs_distance_x",
               "landmarks": ["RIGHT_ANKLE", "CG"],
               "operator": "<",
-              "value": 0.05
+              "value": 0.15
             }
           ]
         },
@@ -76,7 +78,7 @@
               "type": "abs_distance_x",
               "landmarks": ["RIGHT_ANKLE", "CG"],
               "operator": ">",
-              "value": 0.125
+              "value": 0.45
             }
           ]
         },
@@ -88,7 +90,7 @@
               "type": "abs_distance_x",
               "landmarks": ["RIGHT_ANKLE", "CG"],
               "operator": "<",
-              "value": 0.05
+              "value": 0.15
             }
           ]
         }

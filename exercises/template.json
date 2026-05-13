@@ -2,6 +2,7 @@
   "movements": {
     "MOVEMENT_ID": {
       "name": "String: Name of the movement",
+      "normalization_modality": "torso",
       "required_landmarks": [
         "String: Landmark 1", 
         "String: Landmark 2"

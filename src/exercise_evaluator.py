@@ -13,21 +13,29 @@ class ExerciseEvaluator:
         self.hold_start_time = None
         self.last_debug_info = ""
 
-    def _calculate_distance(self, l1, l2, axis=None):
+    def get_current_modality(self) -> str:
+        """Returns the normalization modality of the current movement."""
+        if self.current_training_index >= len(self.training):
+            return "none"
+        training_item = self.training[self.current_training_index]
+        movement = self.movements[training_item["movement"]]
+        return movement.normalization_modality
+
+    def _calculate_distance(self, l1, l2, scale_factor: float, axis=None):
         """
-        Calculates distance between two landmarks using numpy.
+        Calculates distance between two landmarks using numpy, then normalizes by the scale_factor.
         """
         p1 = np.array([l1['x'], l1['y'], l1['z']])
         p2 = np.array([l2['x'], l2['y'], l2['z']])
         
         if axis == 'x':
-            return abs(p1[0] - p2[0])
+            return abs(p1[0] - p2[0]) / scale_factor
         elif axis == 'y':
-            return abs(p1[1] - p2[1])
+            return abs(p1[1] - p2[1]) / scale_factor
         else:
-            return np.linalg.norm(p1 - p2)
+            return np.linalg.norm(p1 - p2) / scale_factor
 
-    def _evaluate_constraint(self, constraint, landmarks_dict) -> bool:
+    def _evaluate_constraint(self, constraint, landmarks_dict, scale_factor) -> bool:
         """
         Evaluates a single constraint and stores debug info.
         """
@@ -39,16 +47,18 @@ class ExerciseEvaluator:
 
         if constraint.type == COND_ABS_DIST_X:
             l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
-            val = self._calculate_distance(l1, l2, axis='x')
-            result = constraint.operator(val, constraint.value)
-            self.debug_info = f"dist_x={val:.3f} (target {constraint.operator.__name__} {constraint.value}) -> {result}"
+            norm_val = self._calculate_distance(l1, l2, scale_factor, axis='x')
+            raw_val = norm_val * scale_factor
+            result = constraint.operator(norm_val, constraint.value)
+            self.debug_info = f"norm_dx={norm_val:.3f} (raw={raw_val:.3f}, target={constraint.value}) -> {result}"
             return result
             
         elif constraint.type == COND_ABS_DIST_Y:
             l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
-            val = self._calculate_distance(l1, l2, axis='y')
-            result = constraint.operator(val, constraint.value)
-            self.debug_info = f"dist_y={val:.3f} (target {constraint.operator.__name__} {constraint.value}) -> {result}"
+            norm_val = self._calculate_distance(l1, l2, scale_factor, axis='y')
+            raw_val = norm_val * scale_factor
+            result = constraint.operator(norm_val, constraint.value)
+            self.debug_info = f"norm_dy={norm_val:.3f} (raw={raw_val:.3f}, target={constraint.value}) -> {result}"
             return result
             
         elif constraint.type == COND_ANGLE:
@@ -58,7 +68,7 @@ class ExerciseEvaluator:
         self.debug_info = f"Unknown constraint: {constraint.type}"
         return False
 
-    def update(self, landmarks_dict: dict, current_time: float):
+    def update(self, landmarks_dict: dict, scale_factor: float, current_time: float):
         if self.current_training_index >= len(self.training):
             return # Training complete
             
@@ -70,7 +80,7 @@ class ExerciseEvaluator:
         all_met = True
         debug_strings = []
         for constraint in position.constraints:
-            met = self._evaluate_constraint(constraint, landmarks_dict)
+            met = self._evaluate_constraint(constraint, landmarks_dict, scale_factor)
             debug_strings.append(self.debug_info)
             if not met:
                 all_met = False

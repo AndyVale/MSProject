@@ -1,5 +1,9 @@
 import operator
 
+# Normalization modalities
+NORM_MODALITY_TORSO = "torso"
+NORM_MODALITY_NONE = "none"
+
 # Core condition types
 COND_ABS_DIST_X = "abs_distance_x"
 COND_ABS_DIST_Y = "abs_distance_y"

@@ -58,11 +58,17 @@ def main():
             
             current_image = extractor.latest_image
             current_result = extractor.latest_result
+            current_raw_result = extractor.latest_raw_result
             
             if current_result is not None and current_image is not None:
                 current_time = time.time()
-                evaluator.update(current_result, current_time)
+                
+                modality = evaluator.get_current_modality()
+                scale_factor = extractor.get_scale_factor(current_raw_result, modality)
+                
+                evaluator.update(current_result, scale_factor, current_time)
                 state_info = evaluator.get_state(current_time)
+                state_info["scale_factor"] = scale_factor
                 
                 annotated_image = renderer.draw(current_image, current_result, state_info)
                 cv2.imshow("Mediapipe Pose Landmarker", annotated_image)

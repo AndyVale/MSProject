@@ -58,5 +58,9 @@ class UIRenderer:
                 debug_info = state_info.get("debug_info", "")
                 if debug_info:
                     cv2.putText(annotated_image, f"DEBUG: {debug_info}", (20, h - 30), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
+                    
+                # Scale Factor at bottom
+                scale_factor = state_info.get("scale_factor", 1.0)
+                cv2.putText(annotated_image, f"SCALE: {scale_factor:.3f}", (20, h - 100), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
                 
         return annotated_image

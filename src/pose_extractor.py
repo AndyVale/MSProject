@@ -2,7 +2,7 @@
 import mediapipe as mp
 import numpy as np
 from mediapipe.tasks.python import vision
-from utils.constants import CG_INDEX
+from utils.constants import CG_INDEX, NORM_MODALITY_TORSO, NORM_MODALITY_NONE
 
 # Approximate mass distribution weights for the 33 landmarks
 _RAW_WEIGHTS = np.array([
@@ -34,6 +34,33 @@ class PoseExtractor:
         self.latest_raw_result = result
         self.latest_result = self.get_landmarks_dict(result)
         self.latest_image = output_image.numpy_view()
+
+    def get_scale_factor(self, result: vision.PoseLandmarkerResult, modality: str) -> float:
+        """
+        Calculates the normalization scale factor based on the requested modality.
+        """
+        if not result or not result.pose_landmarks:
+            return 1.0
+            
+        pose = result.pose_landmarks[0]
+        
+        if modality == NORM_MODALITY_TORSO:
+            # Midpoint of shoulders (11, 12)
+            shoulder_mid_x = (pose[11].x + pose[12].x) / 2.0
+            shoulder_mid_y = (pose[11].y + pose[12].y) / 2.0
+            
+            # Midpoint of hips (23, 24)
+            hip_mid_x = (pose[23].x + pose[24].x) / 2.0
+            hip_mid_y = (pose[23].y + pose[24].y) / 2.0
+            
+            # 2D Euclidean distance
+            distance = np.sqrt((shoulder_mid_x - hip_mid_x)**2 + (shoulder_mid_y - hip_mid_y)**2)
+            
+            # Prevent division by zero
+            return max(distance, 0.001)
+            
+        # Default to NORM_MODALITY_NONE or unrecognized
+        return 1.0
         
     def get_landmarks_dict(self, result: vision.PoseLandmarkerResult) -> dict:
         """

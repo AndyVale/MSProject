@@ -9,6 +9,7 @@ COND_ABS_DIST_X = "abs_distance_x"
 COND_ABS_DIST_Y = "abs_distance_y"
 COND_DIST_X = "distance_x"
 COND_DIST_Y = "distance_y"
+COND_SYMMETRIC_DIST_X = "symmetric_dist_x"
 COND_ANGLE = "angle"
 
 CONDITION_TYPES = {
@@ -16,6 +17,7 @@ CONDITION_TYPES = {
     COND_ABS_DIST_Y,
     COND_DIST_X,
     COND_DIST_Y,
+    COND_SYMMETRIC_DIST_X,
     COND_ANGLE
 }
 

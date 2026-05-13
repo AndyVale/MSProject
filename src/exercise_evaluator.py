@@ -1,6 +1,6 @@
 # exercise_evaluator.py
 import numpy as np
-from utils.constants import COND_ABS_DIST_X, COND_ABS_DIST_Y, COND_DIST_X, COND_DIST_Y, COND_ANGLE
+from utils.constants import COND_ABS_DIST_X, COND_ABS_DIST_Y, COND_DIST_X, COND_DIST_Y, COND_SYMMETRIC_DIST_X, COND_ANGLE
 
 class ExerciseEvaluator:
     def __init__(self, movements: dict, training: list):
@@ -75,6 +75,22 @@ class ExerciseEvaluator:
             norm_val = self._calculate_distance(l1, l2, scale_factor, axis='y', signed=True)
             result = constraint.operator(norm_val, constraint.value)
             self.debug_info = f"norm_dist_y={norm_val:.3f} (target={constraint.value}) -> {result}"
+            return result
+            
+        elif constraint.type == COND_SYMMETRIC_DIST_X:
+            if len(constraint.landmarks) < 3:
+                self.debug_info = "symmetric_dist_x requires 3 landmarks"
+                return False
+            l1 = landmarks_dict[constraint.landmarks[0]]
+            l2 = landmarks_dict[constraint.landmarks[1]]
+            l3 = landmarks_dict[constraint.landmarks[2]]
+            
+            dist1 = self._calculate_distance(l1, l3, scale_factor, axis='x')
+            dist2 = self._calculate_distance(l2, l3, scale_factor, axis='x')
+            
+            sym_diff = abs(dist1 - dist2)
+            result = constraint.operator(sym_diff, constraint.value)
+            self.debug_info = f"sym_diff_x={sym_diff:.3f} (target={constraint.value}) -> {result}"
             return result
             
         elif constraint.type == COND_ANGLE:

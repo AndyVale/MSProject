@@ -15,14 +15,14 @@ from ui_renderer import UIRenderer
 from exercise_loader import ExerciseLoader
 
 def main():
-    camera_capture = init_camera(width=2048 , height=1536, index=0)
+    camera_capture = init_camera(width=3000 , height=2000, index=0)
     
     BaseOptions = mp.tasks.BaseOptions
     PoseLandmarker = mp.tasks.vision.PoseLandmarker
     PoseLandmarkerOptions = mp.tasks.vision.PoseLandmarkerOptions
     VisionRunningMode = mp.tasks.vision.RunningMode
     
-    loader = ExerciseLoader("exercises/leg_ext.json")
+    loader = ExerciseLoader("exercises/arm_raise.json")
     
     # Collect all required landmarks across all movements
     required_landmarks = set()

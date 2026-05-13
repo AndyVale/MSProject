@@ -7,11 +7,15 @@ NORM_MODALITY_NONE = "none"
 # Core condition types
 COND_ABS_DIST_X = "abs_distance_x"
 COND_ABS_DIST_Y = "abs_distance_y"
+COND_DIST_X = "distance_x"
+COND_DIST_Y = "distance_y"
 COND_ANGLE = "angle"
 
 CONDITION_TYPES = {
     COND_ABS_DIST_X,
     COND_ABS_DIST_Y,
+    COND_DIST_X,
+    COND_DIST_Y,
     COND_ANGLE
 }
 

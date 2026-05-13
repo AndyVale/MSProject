@@ -1,6 +1,6 @@
 # exercise_evaluator.py
 import numpy as np
-from utils.constants import COND_ABS_DIST_X, COND_ABS_DIST_Y, COND_ANGLE
+from utils.constants import COND_ABS_DIST_X, COND_ABS_DIST_Y, COND_DIST_X, COND_DIST_Y, COND_ANGLE
 
 class ExerciseEvaluator:
     def __init__(self, movements: dict, training: list):
@@ -21,7 +21,7 @@ class ExerciseEvaluator:
         movement = self.movements[training_item["movement"]]
         return movement.normalization_modality
 
-    def _calculate_distance(self, l1, l2, scale_factor: float, axis=None):
+    def _calculate_distance(self, l1, l2, scale_factor: float, axis=None, signed=False):
         """
         Calculates distance between two landmarks using numpy, then normalizes by the scale_factor.
         """
@@ -29,9 +29,11 @@ class ExerciseEvaluator:
         p2 = np.array([l2['x'], l2['y'], l2['z']])
         
         if axis == 'x':
-            return abs(p1[0] - p2[0]) / scale_factor
+            dist = (p1[0] - p2[0]) / scale_factor
+            return dist if signed else abs(dist)
         elif axis == 'y':
-            return abs(p1[1] - p2[1]) / scale_factor
+            dist = (p1[1] - p2[1]) / scale_factor
+            return dist if signed else abs(dist)
         else:
             return np.linalg.norm(p1 - p2) / scale_factor
 
@@ -61,6 +63,20 @@ class ExerciseEvaluator:
             self.debug_info = f"norm_dy={norm_val:.3f} (raw={raw_val:.3f}, target={constraint.value}) -> {result}"
             return result
             
+        elif constraint.type == COND_DIST_X:
+            l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
+            norm_val = self._calculate_distance(l1, l2, scale_factor, axis='x', signed=True)
+            result = constraint.operator(norm_val, constraint.value)
+            self.debug_info = f"norm_dist_x={norm_val:.3f} (target={constraint.value}) -> {result}"
+            return result
+
+        elif constraint.type == COND_DIST_Y:
+            l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
+            norm_val = self._calculate_distance(l1, l2, scale_factor, axis='y', signed=True)
+            result = constraint.operator(norm_val, constraint.value)
+            self.debug_info = f"norm_dist_y={norm_val:.3f} (target={constraint.value}) -> {result}"
+            return result
+            
         elif constraint.type == COND_ANGLE:
             self.debug_info = "Angle constraint not implemented"
             return False 
@@ -84,7 +100,7 @@ class ExerciseEvaluator:
             debug_strings.append(self.debug_info)
             if not met:
                 all_met = False
-                break
+                # Do not break here so we can see all debug strings in the UI
                 
         self.last_debug_info = " | ".join(debug_strings)
                 

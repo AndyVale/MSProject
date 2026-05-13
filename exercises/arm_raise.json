@@ -1,0 +1,168 @@
+{
+  "movements": {
+    "left_arm_ext": {
+      "name": "Left Arm Lateral Raise",
+      "normalization_modality": "torso",
+      "required_landmarks": [
+        "LEFT_WRIST",
+        "LEFT_SHOULDER",
+        "LEFT_ELBOW"
+      ],
+      "sequence": [
+        {
+          "position_name": "neutral_start",
+          "hold_time_seconds": 0.5,
+          "constraints": [
+            {
+              "type": "distance_y",
+              "landmarks": ["LEFT_WRIST", "LEFT_SHOULDER"],
+              "operator": ">",
+              "value": 0.8
+            },
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["LEFT_WRIST", "LEFT_SHOULDER"],
+              "operator": "<",
+              "value": 0.2
+            }
+          ]
+        },
+        {
+          "position_name": "extended",
+          "hold_time_seconds": 3.0,
+          "constraints": [
+            {
+              "type": "distance_y",
+              "landmarks": ["LEFT_WRIST", "LEFT_SHOULDER"],
+              "operator": "<",
+              "value": 0.0
+            },
+            {
+              "type": "distance_y",
+              "landmarks": ["LEFT_ELBOW", "LEFT_SHOULDER"],
+              "operator": "<",
+              "value": 0.0
+            },
+            {
+              "type": "distance_y",
+              "landmarks": ["LEFT_ELBOW", "LEFT_WRIST"],
+              "operator": ">",
+              "value": 0.0
+            },
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["LEFT_WRIST", "LEFT_SHOULDER"],
+              "operator": ">",
+              "value": 0.4
+            }
+          ]
+        },
+        {
+          "position_name": "neutral_end",
+          "hold_time_seconds": 0.2,
+          "constraints": [
+            {
+              "type": "distance_y",
+              "landmarks": ["LEFT_WRIST", "LEFT_SHOULDER"],
+              "operator": ">",
+              "value": 0.8
+            },
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["LEFT_WRIST", "LEFT_SHOULDER"],
+              "operator": "<",
+              "value": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    "right_arm_ext": {
+      "name": "Right Arm Lateral Raise",
+      "normalization_modality": "torso",
+      "required_landmarks": [
+        "RIGHT_WRIST",
+        "RIGHT_SHOULDER",
+        "RIGHT_ELBOW"
+      ],
+      "sequence": [
+        {
+          "position_name": "neutral_start",
+          "hold_time_seconds": 0.5,
+          "constraints": [
+            {
+              "type": "distance_y",
+              "landmarks": ["RIGHT_WRIST", "RIGHT_SHOULDER"],
+              "operator": ">",
+              "value": 0.8
+            },
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["RIGHT_WRIST", "RIGHT_SHOULDER"],
+              "operator": "<",
+              "value": 0.2
+            }
+          ]
+        },
+        {
+          "position_name": "extended",
+          "hold_time_seconds": 3.0,
+          "constraints": [
+            {
+              "type": "distance_y",
+              "landmarks": ["RIGHT_WRIST", "RIGHT_SHOULDER"],
+              "operator": "<",
+              "value": 0.0
+            },
+            {
+              "type": "distance_y",
+              "landmarks": ["RIGHT_ELBOW", "RIGHT_SHOULDER"],
+              "operator": "<",
+              "value": 0.0
+            },
+            {
+              "type": "distance_y",
+              "landmarks": ["RIGHT_ELBOW", "RIGHT_WRIST"],
+              "operator": ">",
+              "value": 0.0
+            },
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["RIGHT_WRIST", "RIGHT_SHOULDER"],
+              "operator": ">",
+              "value": 0.4
+            }
+          ]
+        },
+        {
+          "position_name": "neutral_end",
+          "hold_time_seconds": 0.2,
+          "constraints": [
+            {
+              "type": "distance_y",
+              "landmarks": ["RIGHT_WRIST", "RIGHT_SHOULDER"],
+              "operator": ">",
+              "value": 0.8
+            },
+            {
+              "type": "abs_distance_x",
+              "landmarks": ["RIGHT_WRIST", "RIGHT_SHOULDER"],
+              "operator": "<",
+              "value": 0.2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "training": [
+    {
+      "movement": "left_arm_ext",
+      "repetitions": 5
+    },
+    {
+      "movement": "right_arm_ext",
+      "repetitions": 5
+    }
+  ]
+}

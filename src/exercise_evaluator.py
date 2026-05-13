@@ -47,43 +47,26 @@ class ExerciseEvaluator:
                 self.debug_info = f"Missing landmark idx: {lm}"
                 return False
 
-        if constraint.type == COND_ABS_DIST_X:
+        if constraint.type in (COND_ABS_DIST_X, COND_ABS_DIST_Y, COND_DIST_X, COND_DIST_Y):
             l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
-            norm_val = self._calculate_distance(l1, l2, scale_factor, axis='x')
-            raw_val = norm_val * scale_factor
-            result = constraint.operator(norm_val, constraint.value)
-            self.debug_info = f"norm_dx={norm_val:.3f} (raw={raw_val:.3f}, target={constraint.value}) -> {result}"
-            return result
+            axis = 'x' if 'x' in constraint.type else 'y'
+            signed = not constraint.type.startswith('abs_')
             
-        elif constraint.type == COND_ABS_DIST_Y:
-            l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
-            norm_val = self._calculate_distance(l1, l2, scale_factor, axis='y')
-            raw_val = norm_val * scale_factor
+            norm_val = self._calculate_distance(l1, l2, scale_factor, axis=axis, signed=signed)
             result = constraint.operator(norm_val, constraint.value)
-            self.debug_info = f"norm_dy={norm_val:.3f} (raw={raw_val:.3f}, target={constraint.value}) -> {result}"
-            return result
             
-        elif constraint.type == COND_DIST_X:
-            l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
-            norm_val = self._calculate_distance(l1, l2, scale_factor, axis='x', signed=True)
-            result = constraint.operator(norm_val, constraint.value)
-            self.debug_info = f"norm_dist_x={norm_val:.3f} (target={constraint.value}) -> {result}"
-            return result
-
-        elif constraint.type == COND_DIST_Y:
-            l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
-            norm_val = self._calculate_distance(l1, l2, scale_factor, axis='y', signed=True)
-            result = constraint.operator(norm_val, constraint.value)
-            self.debug_info = f"norm_dist_y={norm_val:.3f} (target={constraint.value}) -> {result}"
+            if signed:
+                self.debug_info = f"norm_dist_{axis}={norm_val:.3f} (target={constraint.value}) -> {result}"
+            else:
+                raw_val = norm_val * scale_factor
+                self.debug_info = f"norm_d{axis}={norm_val:.3f} (raw={raw_val:.3f}, target={constraint.value}) -> {result}"
             return result
             
         elif constraint.type == COND_SYMMETRIC_DIST_X:
             if len(constraint.landmarks) < 3:
                 self.debug_info = "symmetric_dist_x requires 3 landmarks"
                 return False
-            l1 = landmarks_dict[constraint.landmarks[0]]
-            l2 = landmarks_dict[constraint.landmarks[1]]
-            l3 = landmarks_dict[constraint.landmarks[2]]
+            l1, l2, l3 = [landmarks_dict[lm] for lm in constraint.landmarks[:3]]
             
             dist1 = self._calculate_distance(l1, l3, scale_factor, axis='x')
             dist2 = self._calculate_distance(l2, l3, scale_factor, axis='x')

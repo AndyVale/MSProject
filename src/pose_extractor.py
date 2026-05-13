@@ -2,6 +2,7 @@
 import mediapipe as mp
 import numpy as np
 from mediapipe.tasks.python import vision
+from utils.constants import CG_INDEX
 
 # Approximate mass distribution weights for the 33 landmarks
 _RAW_WEIGHTS = np.array([
@@ -46,7 +47,7 @@ class PoseExtractor:
         pose = result.pose_landmarks[0]
         
         for idx in self.required_landmarks:
-            if idx == -1: # Custom Center of Gravity (CG)
+            if idx == CG_INDEX: # Custom Center of Gravity (CG)
                 # Compute weighted sum of all 33 landmarks
                 cg_x = 0.0
                 cg_y = 0.0
@@ -58,7 +59,7 @@ class PoseExtractor:
                     cg_y += pose[i].y * weight
                     cg_z += pose[i].z * weight
                     
-                landmarks_dict[-1] = {
+                landmarks_dict[CG_INDEX] = {
                     "x": cg_x,
                     "y": cg_y,
                     "z": cg_z

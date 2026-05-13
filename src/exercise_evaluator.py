@@ -1,5 +1,6 @@
 # exercise_evaluator.py
 import numpy as np
+from utils.constants import COND_ABS_DIST_X, COND_ABS_DIST_Y, COND_ANGLE
 
 class ExerciseEvaluator:
     def __init__(self, movements: dict, training: list):
@@ -36,21 +37,21 @@ class ExerciseEvaluator:
                 self.debug_info = f"Missing landmark idx: {lm}"
                 return False
 
-        if constraint.type == "abs_distance_x":
+        if constraint.type == COND_ABS_DIST_X:
             l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
             val = self._calculate_distance(l1, l2, axis='x')
             result = constraint.operator(val, constraint.value)
             self.debug_info = f"dist_x={val:.3f} (target {constraint.operator.__name__} {constraint.value}) -> {result}"
             return result
             
-        elif constraint.type == "abs_distance_y":
+        elif constraint.type == COND_ABS_DIST_Y:
             l1, l2 = landmarks_dict[constraint.landmarks[0]], landmarks_dict[constraint.landmarks[1]]
             val = self._calculate_distance(l1, l2, axis='y')
             result = constraint.operator(val, constraint.value)
             self.debug_info = f"dist_y={val:.3f} (target {constraint.operator.__name__} {constraint.value}) -> {result}"
             return result
             
-        elif constraint.type == "angle":
+        elif constraint.type == COND_ANGLE:
             self.debug_info = "Angle constraint not implemented"
             return False 
 

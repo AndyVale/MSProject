@@ -1,5 +1,10 @@
 import operator
 
+# Screen resolutions
+SCREEN_1280x720 = (1280, 720)
+SCREEN_1920x1080 = (1920, 1080)
+SCREEN_2560x1440 = (2560, 1440)
+
 # Normalization modalities
 NORM_MODALITY_TORSO = "torso"
 NORM_MODALITY_NONE = "none"

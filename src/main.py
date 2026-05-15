@@ -10,12 +10,12 @@ MODEL_PATH = MODLES_DIR / "pose_landmarker_lite.task"
 from utils.utils_camera import init_camera
 
 # Import our new modular components
+from utils.constants import SCREEN_1280x720, SCREEN_1920x1080
 from pose_extractor import PoseExtractor
 from ui_renderer import UIRenderer
 from exercise_loader import ExerciseLoader
-
 def main():
-    camera_capture = init_camera(width=3000 , height=2000, index=0)
+    camera_capture = init_camera(*SCREEN_1280x720, index=0)
     
     BaseOptions = mp.tasks.BaseOptions
     PoseLandmarker = mp.tasks.vision.PoseLandmarker
@@ -49,7 +49,7 @@ def main():
             success, current_frame = camera_capture.read()
             if not success:
                 break
-                
+
             current_frame = cv2.flip(current_frame, 1)
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=current_frame)
             
@@ -71,6 +71,7 @@ def main():
                 state_info["scale_factor"] = scale_factor
                 
                 annotated_image = renderer.draw(current_image, current_result, state_info)
+                annotated_image = cv2.resize(annotated_image, SCREEN_1920x1080)
                 cv2.imshow("Mediapipe Pose Landmarker", annotated_image)
                 
             if cv2.waitKey(1) & 0xFF == ord('q'):

@@ -15,6 +15,7 @@
       "sequence": [
         {
           "position_name": "neutral_start",
+          "pose_image": "poses/neutral_start.png",
           "hold_time_seconds": 0.5,
           "constraints": [
             {
@@ -45,6 +46,7 @@
         },
         {
           "position_name": "extended",
+          "pose_image": "poses/extended.png",
           "hold_time_seconds": 3.0,
           "constraints": [
             {
@@ -111,6 +113,7 @@
         },
         {
           "position_name": "neutral_end",
+          "pose_image": "poses/neutral_end.png",
           "hold_time_seconds": 0.2,
           "constraints": [
             {

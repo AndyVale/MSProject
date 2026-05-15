@@ -22,7 +22,7 @@ def main():
     PoseLandmarkerOptions = mp.tasks.vision.PoseLandmarkerOptions
     VisionRunningMode = mp.tasks.vision.RunningMode
     
-    loader = ExerciseLoader("exercises/bilateral_arm_raise.json")
+    loader = ExerciseLoader("exercises/bilateral_arm_raise/bilateral_arm_raise.json")
     
     # Collect all required landmarks across all movements
     required_landmarks = set()

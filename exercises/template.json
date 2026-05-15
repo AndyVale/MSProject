@@ -10,6 +10,7 @@
       "sequence": [
         {
           "position_name": "String: e.g., 'start_pose'",
+          "pose_image": "String: relative path to pose image, e.g. 'poses/start_pose.png'",
           "hold_time_seconds": 0.0,
           "constraints": [
             {

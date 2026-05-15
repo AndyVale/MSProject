@@ -1,6 +1,7 @@
 # exercise_loader.py
 
 import json
+import os
 from utils.constants import LANDMARK_MAP, OPERATOR_MAP, CONDITION_TYPES
 
 # ==========================================
@@ -23,10 +24,12 @@ class Constraint:
 
 
 class Position:
-    def __init__(self, name: str, hold_time_seconds: float, constraints: list):
+    def __init__(self, name: str, hold_time_seconds: float, constraints: list, pose_image_path: str = None):
         self.name = name
         self.hold_time_seconds = hold_time_seconds
         self.constraints = constraints
+        # Absolute path to the pose image for this position, or None if not provided
+        self.pose_image_path = pose_image_path
 
     def __repr__(self):
         return f"Position(name='{self.name}', hold_time={self.hold_time_seconds}s, constraints={len(self.constraints)})"
@@ -47,7 +50,7 @@ class Movement:
 
 # ==========================================
 # EXERCISE LOADER
-# ==========================================
+# ========================================== 
 
 class ExerciseLoader:
     def __init__(self, exercise_plan_path: str):
@@ -59,8 +62,18 @@ class ExerciseLoader:
 
     def load_exercise_plan(self, exercise_plan_path: str):
         """
-        Loads the exercise from a JSON file and populates the various attributes.
+        Loads the exercise from a JSON file inside an exercise folder and
+        populates the various attributes.
+
+        The exercise_plan_path should point to the JSON file inside the exercise
+        folder (e.g. 'exercises/leg_ext/leg_ext.json'). Pose images referenced
+        in the JSON via the 'pose_image' field are resolved relative to the
+        directory that contains the JSON file.
         """
+        # Resolve the base directory of the JSON so we can build absolute paths
+        # for pose images stored in the sibling 'poses/' folder.
+        exercise_dir = os.path.dirname(os.path.abspath(exercise_plan_path))
+
         with open(exercise_plan_path, 'r') as f:
             data = json.load(f)
             
@@ -80,11 +93,20 @@ class ExerciseLoader:
                         value=c_data["value"]
                     )
                     constraints_list.append(constraint)
-                    
+
+                # Resolve the pose image path relative to the exercise directory
+                pose_image_rel = pos_data.get("pose_image", None)
+                pose_image_abs = None
+                if pose_image_rel:
+                    candidate = os.path.join(exercise_dir, pose_image_rel)
+                    if os.path.isfile(candidate):
+                        pose_image_abs = candidate
+
                 position = Position(
                     name=pos_data["position_name"],
                     hold_time_seconds=pos_data.get("hold_time_seconds", 0.0),
-                    constraints=constraints_list
+                    constraints=constraints_list,
+                    pose_image_path=pose_image_abs
                 )
                 sequence_list.append(position)
                 

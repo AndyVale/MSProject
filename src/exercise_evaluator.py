@@ -152,5 +152,6 @@ class ExerciseEvaluator:
             "current_reps": self.current_reps,
             "target_reps": training_item["repetitions"],
             "hold_progress": hold_progress,
+            "pose_image_path": position.pose_image_path,
             "debug_info": getattr(self, "last_debug_info", "")
         }

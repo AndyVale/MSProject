@@ -12,6 +12,7 @@
       "sequence": [
         {
           "position_name": "neutral_start",
+          "pose_image": "poses/neutral_start.png",
           "hold_time_seconds": 0.5,
           "constraints": [
             {
@@ -24,6 +25,7 @@
         },
         {
           "position_name": "extended",
+          "pose_image": "poses/extended_left.png",
           "hold_time_seconds": 3.0,
           "constraints": [
             {
@@ -36,6 +38,7 @@
         },
         {
           "position_name": "neutral_end",
+          "pose_image": "poses/neutral_end.png",
           "hold_time_seconds": 0.2,
           "constraints": [
             {
@@ -60,6 +63,7 @@
       "sequence": [
         {
           "position_name": "neutral_start",
+          "pose_image": "poses/neutral_start.png",
           "hold_time_seconds": 0.5,
           "constraints": [
             {
@@ -72,6 +76,7 @@
         },
         {
           "position_name": "extended",
+          "pose_image": "poses/extended_right.png",
           "hold_time_seconds": 3.0,
           "constraints": [
             {
@@ -84,6 +89,7 @@
         },
         {
           "position_name": "neutral_end",
+          "pose_image": "poses/neutral_end.png",
           "hold_time_seconds": 0.2,
           "constraints": [
             {
